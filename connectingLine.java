@@ -6,14 +6,18 @@ import java.util.*;
 import java.io.*;
 
 
-public class connectingLine {				//doesn't have to implement shape
+public class connectingLine {
 
 	private Shape shape1;
 	private Shape shape2;
-
-	public connectingLine(Shape s1, Shape s2){
+	private int index1;
+	private int index2;
+	
+	public connectingLine(Shape s1, Shape s2, int sIndex1, int sIndex2){		//TODO find these on creation of the connecting line
 		this.shape1 = s1;
 		this.shape2 = s2;
+		index1 = sIndex1;
+		index2 = sIndex2;
 	}
 
 	public void draw() {
@@ -21,16 +25,23 @@ public class connectingLine {				//doesn't have to implement shape
 	}
 
 	public String makeString(){
-		String s = "Line " + shape1.toString() + " : " + shape2.toString();	//this may need adjusting
-		return (s);
+		String s = index1 + " " + index2;	//this may need adjusting
+		return s;
 	}
+	
+	public int[] getIndices(){					//returns an array of size 2, for both indices
+		int [] indices = {index1, index2};		//only needed for deletion, tostring
+		UI.printf("getting indices %d : %d\n", indices[0], indices[1]);
+		return indices;
+	}
+	
 
 	public void addOrRemoveLine() {
 		// TODO Auto-generated method stub
 	}
 
 	public void removeAllLines() {
-		// TODO Auto-generated method stub
+		
 	}
 
 	public void redrawLines() {
