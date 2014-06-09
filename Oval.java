@@ -1,4 +1,3 @@
-
 import ecs100.*;
 
 import java.awt.Color;
@@ -12,6 +11,7 @@ public class Oval implements Shape {
 	private double centreX, centreY;
 	private Color col;
 	private String insideText;
+	private boolean selected = false;
 
 	public Oval(double x1, double y1, double w, double h, String text){
 		this.x = x1;
@@ -38,33 +38,38 @@ public class Oval implements Shape {
 	}
 
 	////////////////////////////////////////////
-	//			CHECK IF IT'S ON THE SHAPE
+	// CHECK IF IT'S ON THE SHAPE
 	////////////////////////////////////////////
 
 	public boolean on(double x, double y) {
-		return (y>=this.y && y < this.y + ht  && x>=this.x && x < this.x + wd);		//bounding box
-		//USE THE EQUATION HERE.
+
+		//could change to selected here.
+		if((y>=this.y && y < this.y + ht && x>=this.x && x < this.x + wd)){
+			this.changeSelected();
+			return true;
+		}
+		return false;
 
 		//return (x-centreX)^2/(x radius)^2)) + ((y-centreY)/(y radius)^2) < 1
 	}
 
-	public void draw() {		
-		UI.setColor(this.col);			//set it to the right color (take col as a param
+	public void draw() {
+		col = Color.black;	
 		UI.setColor(Color.white);
 		UI.fillOval(x, y, wd, ht);
-		UI.setColor(Color.black);
-		UI.drawOval(x, y, wd, ht);
-		if(this.insideText==null){return;}    //done!
-		UI.drawString(this.insideText, x+(wd/3), y+(ht/2));    //figure out a way without hardcoding it
-	}
 
-	public void resize(double dWd, double dHt) {
-		this.ht = dHt;
-		this.wd = dWd;
+		if(selected){
+			col = Color.red;
+		}
+		UI.setColor(col);
+		UI.drawOval(x,y,wd,ht);
+		if(this.insideText==null){return;} //done!
+		col = Color.black;
+		UI.drawString(this.insideText, x+(wd/3), y+(ht/2)); //figure out a way without hardcoding it
 	}
 
 	public String makeString(){
-		String s = "Oval " + this.x + " " + this.y + " " + this.wd + " " + this.ht + " " + this.col;
+		String s = "Oval " + this.x + " " + this.y + " " + this.wd + " " + this.ht + " " + this.insideText;
 		return (s);
 	}
 
@@ -83,30 +88,52 @@ public class Oval implements Shape {
 		this.insideText = newText;
 	}
 
-	public void addOrRemoveLine() {
-		//
-
+	public void changeSelected(){
+		if(this.selected){
+			this.selected = false;
+		} else {
+			this.selected = true;
+		}
 	}
 
-	////////////////////////////////////////////
-	// REMOVES ALL LINES ASSOCIATED WITH THE SHAPE
-	////////////////////////////////////////////
-
-	public void removeAllLines() {
-		// specifying the shape at the other end of the line
-
+	public void displayControlPoint(){	//will only display if it's selected, used for resizeing the shape
+		if(selected)
+			UI.fillRect(this.x + this.wd, this.y + ht, 10, 10);	//small square in the top right
 	}
 
-	////////////////////////////////////////////
-	// REDRAWS ALL THE LINES
-	////////////////////////////////////////////
-
-	public void redrawLines() {
-		//if it has lines connected to it,
-		//then redraw them.
-		//have an arraylist opf lines
-
+	public boolean onControlPoint(double x, double y) {
+		return (y>=this.y+ht && y < this.y + ht + 10 && x>=this.x + wd && x < this.x + wd + 10);
+	}
+	
+	public void setWidth(double x) {
+		this.wd = x;
+	}
+	public void setHeight(double y) {
+		this.ht = y;
+	}
+		
+	public double getWidth() {
+		return this.wd;
 	}
 
+	@Override
+	public double getHeight() {
+		return this.ht;
+	}
+
+	public boolean isSelected(){
+		if(selected)
+			return true;
+		return false;
+	}
+	
+	public void setCentreY(double y){
+		this.centreY = y;
+		this.y = centreY - ht/2;
+	}
+	public void setCentreX(double x){
+		this.centreX = x;
+		this.x = centreX - wd/2;
+	}
 
 }
