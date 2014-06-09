@@ -1,28 +1,17 @@
-
 import ecs100.*;
 
 public interface Shape {
 
 	///////////////////////////
-	//		MY CONSTANTS
+	// MY CONSTANTS
 	//////////////////////////
-	//am i going to need any constants? they're all going to be different...?
 	public void draw();
-
-	public void redrawLines();	//all lines are drawn before the shape is drawn
-
-	public void resize(double dWd, double dHt);
 
 	public void move(double dx, double dy);
 
-	public boolean on(double x, double y);	//is mouse pos on top of this shape
+	public boolean on(double x, double y); //is mouse pos on top of this shape
 
-	public void setText(String t);		//return void or string?
-
-	public void addOrRemoveLine();		//is this a good name? specify the shape at the other end of the line
-	//maybe connectDisconnect()
-
-	public void removeAllLines();
+	public void setText(String t); //return void or string?
 
 	public String makeString();
 
@@ -30,12 +19,22 @@ public interface Shape {
 
 	public double getCentreY();
 	
+	public void setCentreY(double y);
+	public void setCentreX(double x);
+	
+	public boolean isSelected();
+
 	public void changeSelected();
 
 	public void displayControlPoint();
-	
-	public boolean onControlPoint();
 
+	public boolean onControlPoint(double x, double y);
+	
+	public void setWidth(double x);
+	
+	public void setHeight(double y);
+
+	public double getWidth();
+	
+	public double getHeight();
 }
-/*	HOW ARE WE GOING TO REPRESENT THE SHAPE?
-	HOW ARE YOU GOING TO RESIZE IT? CENTRE STAYS THE SAME? YOU MIGHT WANT TO REPRESENT THE SHAPE SEPERATELY*/
