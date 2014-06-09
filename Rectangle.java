@@ -1,10 +1,8 @@
-
 import ecs100.*;
 
 import java.awt.Color;
 import java.util.*;
 import java.io.*;
-
 
 public class Rectangle implements Shape {
 
@@ -13,7 +11,6 @@ public class Rectangle implements Shape {
 	private Color col;
 	private String insideText;
 	private boolean selected = false;
-	//private List <String> lines = new ArrayList<String>(); maybhe use a line ovbject
 
 	////////////////////////////////////////////
 	// CONSTRUCTOR
@@ -34,13 +31,11 @@ public class Rectangle implements Shape {
 	public void changeSelected(){
 		if(this.selected){
 			this.selected = false;
-			UI.println("changed");
 		} else {
 			this.selected = true;
 		}
-		UI.println("Shape is now " + selected);
 	}
-	
+
 	////////////////////////////////////////////
 	// GET CENTRE X AND CENTRE Y - getter methods for better encapsulation?
 	////////////////////////////////////////////
@@ -58,7 +53,20 @@ public class Rectangle implements Shape {
 	////////////////////////////////////////////
 
 	public boolean on(double x, double y) {
-		return (y>=this.y && y < this.y + ht && x>=this.x && x < this.x + wd);
+
+		//could change to selected here.
+		if((y>=this.y && y < this.y + ht && x>=this.x && x < this.x + wd)){
+			this.changeSelected();
+			return true;
+		}
+		//return (y>=this.y && y < this.y + ht && x>=this.x && x < this.x + wd);
+		return false;
+	}
+	
+	public boolean isSelected(){
+		if(selected)
+			return true;
+		return false;
 	}
 
 	////////////////////////////////////////////
@@ -66,41 +74,19 @@ public class Rectangle implements Shape {
 	////////////////////////////////////////////
 
 	public void draw() {
-		col = Color.black;					//UI.drawPolygon([x, x+wd],[y, y+ht], 4);
+		col = Color.black;	//UI.drawPolygon([x, x+wd],[y, y+ht], 4);
 		UI.setColor(Color.white);
 		UI.fillRect(x, y, wd, ht);
-		
+
 		if(selected){
 			col = Color.red;
 		}
 		UI.setColor(col);
 		//UI.drawRect(x, y, wd, ht);
 		UI.drawPolygon(new double[]{x, x+wd, x+wd, x}, new double []{y, y, y+ht, y+ht}, 4);
-		if(this.insideText==null){return;}    //done!
+		if(this.insideText==null){return;} //done!
 		col = Color.black;
-		UI.drawString(this.insideText, x+(wd/3), y+(ht/2));    //figure out a way without hardcoding it
-	}
-
-	////////////////////////////////////////////
-	// RESIZE THE SHAPE
-	////////////////////////////////////////////
-
-	public void resize(double x, double y) {
-		double changeWd = centreX-x;
-		double changeHt = centreY-y;
-		
-		
-		
-		this.x += x-this.x;
-		this.y += y-this.y;
-		
-		
-		
-		
-
-		//TODO
-		//FIX THE LINES LIKE IN THE OTHER PROGRAM
-
+		UI.drawString(this.insideText, x+(wd/3), y+(ht/2)); //figure out a way without hardcoding it
 	}
 
 	////////////////////////////////////////////
@@ -117,7 +103,7 @@ public class Rectangle implements Shape {
 	// MOVE
 	////////////////////////////////////////////
 
-	public void move(double dx, double dy) {		//released xy is the arg
+	public void move(double dx, double dy) {	//released xy is the arg
 		this.centreX += dx;
 		this.centreY += dy;
 		this.x = centreX - wd/2;
@@ -132,39 +118,41 @@ public class Rectangle implements Shape {
 		this.insideText = newText;
 	}
 
-	////////////////////////////////////////////
-	// ADDING A LINE (OR REMOVING)
-	////////////////////////////////////////////
-
-	public void addOrRemoveLine() {
-		//
-	}
-
-	////////////////////////////////////////////
-	// REMOVES ALL LINES ASSOCIATED WITH THE SHAPE
-	////////////////////////////////////////////
-
-	public void removeAllLines() {
-		
-	}
-
-	////////////////////////////////////////////
-	// REDRAWS ALL THE LINES
-	////////////////////////////////////////////
-
-	public void redrawLines() {
-		//if it has lines connected to it,
-		//then redraw them.
-		//have an arraylist opf lines
-
-	}
-	
-	public void displayControlPoint(){		//will only display if it's selected, used for resizeing the shape
+	public void displayControlPoint(){	//will only display if it's selected, used for resizeing the shape
 		if(selected)
-			UI.fillRect(this.x-10, this.y-10, 10, 10);	//small square in the top right
+			UI.fillRect(this.x + this.wd, this.y + ht, 10, 10);	//small square in the top right
+	}
+
+	public boolean onControlPoint(double x, double y) {
+		return (y>=this.y+ht && y < this.y + ht + 10 && x>=this.x + wd && x < this.x + wd + 10);
 	}
 	
-	
-	
+	public void setCentreY(double y){
+		this.centreY = y;
+		this.y = centreY - ht/2;
+	}
+	public void setCentreX(double x){
+		this.centreX = x;
+		this.x = centreX - wd/2;
+	}
 
+	public void setWidth(double x) {
+		this.wd = x;
+
+		this.x = centreX - wd/2;
+	}
+
+	public void setHeight(double y) {
+		this.ht = y;
+	}
+
+	@Override
+	public double getWidth() {
+		return this.wd;
+	}
+
+	@Override
+	public double getHeight() {
+		return this.ht;
+	}
 }
